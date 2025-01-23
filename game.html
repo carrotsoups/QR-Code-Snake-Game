@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    html,body{height:100%;margin:0;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#39FF14}#scores{font-size:20px;margin-bottom:20px}canvas{border:2px solid rgba(57,255,20,0.5);box-shadow:0 0 10px rgba(57,255,20,0.5)}button{display:none;padding:12px 24px;background:#39FF14;color:#000;border:none;border-radius:25px;cursor:pointer}button:hover{background:#2dff00;transform:translateY(-2px)}
+  </style>
+</head>
+<body>
+  <div id="scores">Score: <span id="score">0</span> | High Score: <span id="highscore">0</span></div>
+  <canvas id="g" width="400" height="400"></canvas>
+  <button id="restart">Restart</button>
+  <script>
+    let c=document.getElementById("g"),x=c.getContext("2d"),btn=document.getElementById("restart"),s=16,t=0,play=1,score=0,highScore=0,n,a,r=(m,v)=>Math.floor(Math.random()*(v-m))+m,updt=()=>{document.getElementById("score").textContent=score,document.getElementById("highscore").textContent=highScore},init=()=>{n={x:160,y:160,dx:s,dy:0,cells:[],len:4},a={x:r(0,25)*s,y:r(0,25)*s},play=1,btn.style.display="none",score=0,updt()},draw=()=>{if(!play)return btn.style.display="block",updt();requestAnimationFrame(draw);if(++t<4)return;t=0,x.clearRect(0,0,c.width,c.height),n.x+=n.dx,n.y+=n.dy;if(n.x<0||n.y<0||n.x>=c.width||n.y>=c.height)return play=0;n.cells.unshift({x:n.x,y:n.y}),n.cells.length>n.len&&n.cells.pop(),x.fillStyle="red",x.fillRect(a.x,a.y,s-1,s-1),n.cells.forEach((e,i)=>{let opacity=1-(i/n.cells.length);x.fillStyle=`rgba(57,255,20,${opacity})`;x.fillRect(e.x,e.y,s-1,s-1),e.x===a.x&&e.y===a.y&&(n.len++,score++,highScore=Math.max(highScore,score),updt(),a.x=r(0,25)*s,a.y=r(0,25)*s);for(let j=i+1;j<n.cells.length;j++)e.x===n.cells[j].x&&e.y===n.cells[j].y&&(play=0)});c.style.boxShadow="0 0 15px 10px rgba(57,255,20,0.8)"};btn.onclick=()=>{init();draw()},document.addEventListener("keydown",e=>{if(play){if(e.key==="ArrowLeft"&&n.dx===0)n.dx=-s,n.dy=0;else if(e.key==="ArrowUp"&&n.dy===0)n.dy=-s,n.dx=0;else if(e.key==="ArrowRight"&&n.dx===0)n.dx=s,n.dy=0;else if(e.key==="ArrowDown"&&n.dy===0)n.dy=s,n.dx=0}});init();draw();
+  </script>
+</body>
+</html>
